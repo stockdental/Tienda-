@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StockDental | Marcas de Élite</title>
+    <title>StockDental | Insumos Profesionales</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -14,8 +14,9 @@
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; backdrop-filter: blur(8px); }
         .modal.active { display: flex; align-items: flex-end; }
         .modal-content { background: white; width: 100%; border-radius: 2rem 2rem 0 0; padding: 2rem; max-height: 90vh; overflow-y: auto; }
-        .brand-logo { filter: grayscale(100%); opacity: 0.6; transition: all 0.3s; height: 25px; }
-        .brand-logo:hover { filter: grayscale(0%); opacity: 1; }
+        /* Ajuste de logos de marcas */
+        .brand-logo-img { height: 20px; object-fit: contain; filter: grayscale(1); opacity: 0.7; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="text-slate-800">
@@ -32,11 +33,11 @@
             </button>
         </div>
 
-        <div class="max-w-xl mx-auto flex justify-between items-center mb-6 px-2 py-3 border-y border-slate-50 overflow-hidden">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Ivoclar_Vivadent_logo.png" class="brand-logo" alt="Ivoclar">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/3M_Google_Logo.svg/1000px-3M_Google_Logo.svg.png" class="brand-logo" alt="3M">
-            <span class="text-[12px] font-black text-slate-300 italic">VITA</span>
-            <span class="text-[12px] font-black text-slate-300 italic">KULZER</span>
+        <div class="max-w-xl mx-auto flex justify-between items-center mb-6 px-4 py-2 bg-slate-50 rounded-xl border border-slate-100">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Ivoclar_Vivadent_logo.png" class="brand-logo-img" alt="Ivoclar">
+            <img src="https://www.3m.com.ve/3m_theme_static/themes/3MTheme/images/logo-3m.png" class="brand-logo-img" alt="3M">
+            <span class="text-[10px] font-black text-slate-400">VITA</span>
+            <span class="text-[10px] font-black text-slate-400">KULZER</span>
         </div>
 
         <div class="max-w-xl mx-auto mb-4">
@@ -54,34 +55,32 @@
         </div>
     </header>
 
-    <main id="catalog" class="max-w-xl mx-auto p-6 flex flex-col gap-6 pb-32">
-        </main>
+    <main id="catalog" class="max-w-xl mx-auto p-6 flex flex-col gap-6 pb-32"></main>
 
     <div id="cart-modal" class="modal" onclick="if(event.target == this) toggleModal('cart-modal')">
         <div class="modal-content">
-            <h2 class="text-2xl font-800 text-blue-900 mb-6 uppercase italic">Tu Pedido</h2>
+            <h2 class="text-2xl font-800 text-blue-900 mb-6 uppercase italic">Confirmar Compra</h2>
             
             <div class="space-y-3 mb-6">
-                <input type="text" id="cust-name" class="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-xl p-4 outline-none font-bold text-sm" placeholder="Nombre completo">
-                <input type="text" id="cust-address" class="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-xl p-4 outline-none font-bold text-sm" placeholder="Dirección de Consultorio">
+                <input type="text" id="cust-name" class="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-xl p-4 outline-none font-bold text-sm" placeholder="Tu Nombre o Clínica">
+                <input type="text" id="cust-address" class="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-xl p-4 outline-none font-bold text-sm" placeholder="Dirección de Envío">
             </div>
 
-            <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-6 text-blue-900">
-                <p class="text-[10px] font-black uppercase tracking-widest mb-2 opacity-60">Datos de Pago</p>
-                <p class="text-sm font-bold">V-17888104 | 0424-339.1197</p>
-                <p class="text-xs mb-3">Banco Venezuela / Mercantil</p>
-                <p class="text-[10px] font-black uppercase opacity-60">Binance Pay</p>
-                <p class="text-xs font-bold italic">laboratoriomolimed@gmail.com</p>
+            <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-6 text-blue-900 text-xs">
+                <p class="font-black uppercase tracking-widest mb-2 opacity-60">Datos de Pago</p>
+                <p class="font-bold">V-17888104 | Pago Móvil</p>
+                <p>Bancos: Venezuela / Mercantil</p>
             </div>
 
-            <div id="cart-list" class="space-y-2 mb-6"></div>
+            <div id="cart-list" class="space-y-4 mb-6">
+                </div>
 
             <div class="border-t pt-4 mb-8 flex justify-between items-center">
                 <span class="font-bold text-slate-400 text-xs uppercase">Total</span>
                 <span id="modal-total" class="text-3xl font-black text-blue-600">0 Bs.</span>
             </div>
 
-            <button onclick="sendWhatsApp()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black shadow-lg uppercase tracking-widest">Enviar Pedido</button>
+            <button onclick="sendWhatsApp()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black shadow-lg uppercase tracking-widest">Enviar Pedido por WhatsApp</button>
         </div>
     </div>
 
@@ -90,8 +89,7 @@
             { id: 1, name: "Yeso WhipMix T4", price: 6599, img: "yeso witmix.jpeg", cat: "Técnicos" },
             { id: 2, name: "Guantes de Nitrilo", price: 5628, img: "gauntes de nitrilo.jpeg", cat: "Odontólogo" },
             { id: 3, name: "Acrílico Líquido", price: 3666, img: "acrilico liquido termo.jpeg", cat: "Técnicos" },
-            { id: 4, name: "Cera Base Tropical", price: 7198, img: "descarga.jpeg", cat: "Estudiantes" },
-            { id: 5, name: "Yeso Blanco", price: 2500, img: "yeso blanco.jpeg", cat: "Estudiantes" }
+            { id: 4, name: "Cera Base Tropical", price: 7198, img: "descarga.jpeg", cat: "Estudiantes" }
         ];
 
         let cart = {};
@@ -104,17 +102,17 @@
                 const qty = cart[p.id] ? cart[p.id].qty : 0;
                 container.innerHTML += `
                     <div class="product-card">
-                        <div class="h-48 bg-white flex items-center justify-center p-4">
+                        <div class="h-48 flex items-center justify-center p-4">
                             <img src="${p.img}" class="max-h-full object-contain" onerror="this.src='https://placehold.co/400x300?text=Stock+Dental'">
                         </div>
                         <div class="p-6 border-t border-slate-50">
                             <h3 class="text-lg font-bold text-blue-900 leading-tight mb-4">${p.name}</h3>
                             <div class="flex justify-between items-end">
                                 <div>
-                                    <span class="text-2xl font-black text-blue-600">${p.price.toLocaleString('es-VE')} <small class="text-xs">Bs.</small></span>
-                                    <p class="text-[10px] font-bold text-slate-400 uppercase">Tasa Oficial BCV</p>
+                                    <span class="text-2xl font-black text-blue-600">${p.price.toLocaleString('es-VE')} <small class="text-xs font-sans text-slate-400">Bs.</small></span>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Tasa Oficial BCV</p>
                                 </div>
-                                <div class="flex items-center bg-slate-100 rounded-xl p-1 border border-slate-100">
+                                <div class="flex items-center bg-slate-100 rounded-xl p-1">
                                     <button onclick="updateQty(${p.id}, -1)" class="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-blue-600 font-bold">-</button>
                                     <span class="w-8 text-center font-bold text-blue-900">${qty}</span>
                                     <button onclick="updateQty(${p.id}, 1)" class="w-8 h-8 flex items-center justify-center bg-blue-600 rounded-lg shadow-sm text-white font-bold">+</button>
@@ -128,9 +126,7 @@
 
         function filterEverything() {
             const term = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = productos.filter(p => {
-                return p.name.toLowerCase().includes(term) && (currentCat === 'Todos' || p.cat === currentCat);
-            });
+            const filtered = productos.filter(p => p.name.toLowerCase().includes(term) && (currentCat === 'Todos' || p.cat === currentCat));
             render(filtered);
         }
 
@@ -145,6 +141,17 @@
             if (!cart[id]) cart[id] = { ...productos.find(p => p.id === id), qty: 0 };
             cart[id].qty += delta;
             if (cart[id].qty <= 0) delete cart[id];
+            updateInterface();
+        }
+
+        // FUNCIÓN PARA ELIMINAR COMPLETAMENTE DEL CARRITO
+        function removeItem(id) {
+            delete cart[id];
+            updateInterface();
+            updateCartList();
+        }
+
+        function updateInterface() {
             document.getElementById('cart-count').innerText = Object.values(cart).reduce((a, b) => a + b.qty, 0);
             filterEverything();
         }
@@ -160,9 +167,20 @@
             list.innerHTML = "";
             Object.values(cart).forEach(item => {
                 const sub = item.price * item.qty; total += sub;
-                list.innerHTML += `<div class="flex justify-between text-sm font-bold pb-2 border-b border-slate-50">
-                    <span class="text-slate-600">${item.name} (x${item.qty})</span>
-                    <span class="text-blue-600">${sub.toLocaleString('es-VE')} Bs.</span>
+                list.innerHTML += `
+                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <div class="flex-1">
+                        <p class="font-bold text-blue-900 text-sm leading-none">${item.name}</p>
+                        <p class="text-[10px] text-blue-400 font-bold mt-1 uppercase">${item.qty} un x ${item.price.toLocaleString('es-VE')} Bs.</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="font-black text-blue-600 text-sm">${sub.toLocaleString('es-VE')} Bs.</span>
+                        <button onclick="removeItem(${item.id})" class="text-red-400 hover:text-red-600 p-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>`;
             });
             document.getElementById('modal-total').innerText = total.toLocaleString('es-VE') + " Bs.";
@@ -171,15 +189,14 @@
         function sendWhatsApp() {
             const name = document.getElementById('cust-name').value;
             const address = document.getElementById('cust-address').value;
-            const items = Object.values(cart);
-            if(!name || !address || items.length === 0) return alert("Completa tus datos.");
+            if(!name || !address || Object.keys(cart).length === 0) return alert("Completa tus datos y selecciona productos.");
             let total = 0;
             let msg = `🦷 *PEDIDO STOCKDENTAL*%0A👤 *Cliente:* ${name}%0A📍 *Dirección:* ${address}%0A%0A`;
-            items.forEach(i => {
+            Object.values(cart).forEach(i => {
                 const s = i.price * i.qty; total += s;
                 msg += `• ${i.name} x${i.qty} (${s.toLocaleString('es-VE')} Bs.)%0A`;
             });
-            msg += `%0A💰 *TOTAL:* ${total.toLocaleString('es-VE')} Bs.%0A📌 _Tasa BCV del día._`;
+            msg += `%0A💰 *TOTAL:* ${total.toLocaleString('es-VE')} Bs.%0A📌 _Referencia Tasa BCV._`;
             window.open(`https://wa.me/584243391197?text=${msg}`);
         }
 

@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StockDental | Búsqueda Reactiva</title>
+    <title>StockDental | Catálogo Oficial</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
-        .product-card { background: white; border-radius: 1.5rem; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eef2f6; }
+        .product-card { background: white; border-radius: 1.5rem; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .category-btn { transition: all 0.2s; border: 2px solid #e2e8f0; white-space: nowrap; background: white; }
-        .category-btn.active { background-color: #2563eb; color: white; border-color: #2563eb; box-shadow: 0 4px 10px rgba(37,99,235,0.2); }
+        .category-btn.active { background-color: #2563eb; color: white; border-color: #2563eb; }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; backdrop-filter: blur(8px); }
         .modal.active { display: flex; align-items: flex-end; }
-        .modal-content { background: white; width: 100%; border-radius: 2rem 2rem 0 0; padding: 2rem; max-height: 85vh; overflow-y: auto; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .modal-content { background: white; width: 100%; border-radius: 2rem 2rem 0 0; padding: 2rem; max-height: 90vh; overflow-y: auto; }
+        .payment-box { background-color: #eff6ff; border: 1px solid #dbeafe; border-radius: 1rem; padding: 1rem; margin-bottom: 1.5rem; }
     </style>
 </head>
 <body class="text-slate-800">
@@ -23,7 +23,7 @@
         <div class="max-w-xl mx-auto flex justify-between items-center mb-4">
             <div>
                 <h1 class="text-2xl font-800 text-blue-900 tracking-tighter uppercase">Stock<span class="text-blue-500">Dental</span></h1>
-                <p class="text-[10px] font-bold text-slate-400 tracking-widest uppercase">Ventas al Detal y Mayor</p>
+                <p class="text-[10px] font-bold text-slate-400 tracking-widest uppercase">Suministros Profesionales</p>
             </div>
             <button onclick="toggleModal('cart-modal')" class="relative p-3 bg-blue-50 rounded-2xl text-blue-600">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
@@ -32,17 +32,17 @@
         </div>
 
         <div class="max-w-xl mx-auto mb-4">
-            <div class="bg-slate-100 rounded-xl flex items-center px-4 py-3 border border-slate-200 shadow-inner">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                <input type="text" id="searchInput" oninput="filterEverything()" placeholder="Escribe 'Y' para ver Yesos..." class="bg-transparent w-full outline-none text-sm font-bold text-slate-600 placeholder:text-slate-400">
+            <div class="bg-slate-100 rounded-xl flex items-center px-4 py-2 border border-slate-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                <input type="text" id="searchInput" oninput="filterEverything()" placeholder="Buscar material o equipo..." class="bg-transparent w-full outline-none text-sm font-semibold">
             </div>
         </div>
 
         <div class="max-w-xl mx-auto flex gap-2 overflow-x-auto no-scrollbar pb-2">
-            <button onclick="setCategory('Todos', this)" class="category-btn active px-5 py-2 rounded-xl text-xs font-black">Todos</button>
-            <button onclick="setCategory('Odontólogo', this)" class="category-btn px-5 py-2 rounded-xl text-xs font-black">Odontólogo</button>
-            <button onclick="setCategory('Estudiantes', this)" class="category-btn px-5 py-2 rounded-xl text-xs font-black">Estudiantes</button>
-            <button onclick="setCategory('Técnicos', this)" class="category-btn px-5 py-2 rounded-xl text-xs font-black">Técnicos</button>
+            <button onclick="setCategory('Todos', this)" class="category-btn active px-4 py-2 rounded-xl text-xs font-black">Todos</button>
+            <button onclick="setCategory('Odontólogo', this)" class="category-btn px-4 py-2 rounded-xl text-xs font-black">Odontólogo</button>
+            <button onclick="setCategory('Estudiantes', this)" class="category-btn px-4 py-2 rounded-xl text-xs font-black">Estudiantes</button>
+            <button onclick="setCategory('Técnicos', this)" class="category-btn px-4 py-2 rounded-xl text-xs font-black">Técnicos</button>
         </div>
     </header>
 
@@ -51,17 +51,29 @@
 
     <div id="cart-modal" class="modal" onclick="if(event.target == this) toggleModal('cart-modal')">
         <div class="modal-content">
-            <h2 class="text-2xl font-800 text-blue-900 mb-6 italic">Finalizar Pedido</h2>
-            <div class="space-y-3 mb-6 text-sm">
-                <input type="text" id="cust-name" class="w-full bg-slate-100 rounded-xl p-4 outline-none font-bold" placeholder="Nombre completo">
-                <input type="text" id="cust-address" class="w-full bg-slate-100 rounded-xl p-4 outline-none font-bold" placeholder="Dirección / Consultorio">
+            <h2 class="text-2xl font-800 text-blue-900 mb-6 uppercase">Tu Pedido</h2>
+            
+            <div class="space-y-3 mb-6">
+                <input type="text" id="cust-name" class="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-xl p-4 outline-none font-bold text-sm" placeholder="Nombre completo">
+                <input type="text" id="cust-address" class="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-xl p-4 outline-none font-bold text-sm" placeholder="Dirección de Consultorio">
             </div>
+
+            <div class="payment-box text-blue-900">
+                <p class="text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Datos de Pago Móvil</p>
+                <p class="text-sm font-bold">V-17888104 | 0424-339.1197</p>
+                <p class="text-xs mb-3 text-blue-700">Banco Venezuela (0102) / Mercantil (0105)</p>
+                <p class="text-[10px] font-black uppercase tracking-widest mb-1 opacity-60">Binance Pay</p>
+                <p class="text-xs font-bold">laboratoriomolimed@gmail.com</p>
+            </div>
+
             <div id="cart-list" class="space-y-2 mb-6"></div>
+
             <div class="border-t pt-4 mb-8 flex justify-between items-center">
-                <span class="font-bold text-slate-400 text-xs">TOTAL A PAGAR</span>
+                <span class="font-bold text-slate-400 text-xs uppercase">Total Estimado</span>
                 <span id="modal-total" class="text-3xl font-black text-blue-600">0 Bs.</span>
             </div>
-            <button onclick="sendWhatsApp()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black shadow-lg uppercase tracking-widest">Enviar por WhatsApp</button>
+
+            <button onclick="sendWhatsApp()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black shadow-lg uppercase tracking-widest">Enviar Comprobante</button>
         </div>
     </div>
 
@@ -79,27 +91,25 @@
 
         function render(data = productos) {
             const container = document.getElementById('catalog');
-            container.innerHTML = data.length === 0 ? `<p class="text-center py-10 font-bold text-slate-400 italic">No hay resultados...</p>` : "";
-            
+            container.innerHTML = "";
             data.forEach(p => {
                 const qty = cart[p.id] ? cart[p.id].qty : 0;
                 container.innerHTML += `
                     <div class="product-card">
-                        <div class="h-48 bg-white relative p-4 flex items-center justify-center">
-                            <img src="${p.img}" class="max-w-full max-h-full object-contain" onerror="this.src='https://placehold.co/400x300?text=Foto+Producto'">
-                            <span class="absolute top-4 left-4 bg-blue-600 text-white px-2 py-1 rounded text-[8px] font-black uppercase tracking-tighter shadow-sm">${p.cat}</span>
+                        <div class="h-48 bg-white flex items-center justify-center p-4">
+                            <img src="${p.img}" class="max-h-full object-contain" onerror="this.src='https://placehold.co/400x300?text=Stock+Dental'">
                         </div>
-                        <div class="p-6 border-t border-slate-50 bg-white">
-                            <h3 class="text-lg font-bold text-blue-900 mb-1 leading-tight">${p.name}</h3>
-                            <div class="flex justify-between items-center mt-4">
+                        <div class="p-6 border-t border-slate-50">
+                            <h3 class="text-lg font-bold text-blue-900 leading-tight mb-4">${p.name}</h3>
+                            <div class="flex justify-between items-end">
                                 <div>
-                                    <span class="text-2xl font-black text-blue-600 font-mono">${p.price.toLocaleString('es-VE')} <small class="text-xs font-sans">Bs.</small></span>
-                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Precio Tasa BCV</p>
+                                    <span class="text-2xl font-black text-blue-600">${p.price.toLocaleString('es-VE')} <small class="text-xs">Bs.</small></span>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase">Tasa Oficial BCV</p>
                                 </div>
-                                <div class="flex items-center bg-slate-100 rounded-xl p-1 shadow-inner">
-                                    <button onclick="updateQty(${p.id}, -1)" class="w-9 h-9 flex items-center justify-center bg-white rounded-lg shadow-sm text-blue-600 font-black text-lg">-</button>
-                                    <span class="w-10 text-center font-black text-blue-900 text-md">${qty}</span>
-                                    <button onclick="updateQty(${p.id}, 1)" class="w-9 h-9 flex items-center justify-center bg-blue-600 rounded-lg shadow-sm text-white font-black text-lg">+</button>
+                                <div class="flex items-center bg-slate-100 rounded-xl p-1 shadow-inner border border-slate-100">
+                                    <button onclick="updateQty(${p.id}, -1)" class="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-blue-600 font-bold">-</button>
+                                    <span class="w-8 text-center font-bold text-blue-900">${qty}</span>
+                                    <button onclick="updateQty(${p.id}, 1)" class="w-8 h-8 flex items-center justify-center bg-blue-600 rounded-lg shadow-sm text-white font-bold">+</button>
                                 </div>
                             </div>
                         </div>
@@ -108,20 +118,19 @@
             });
         }
 
-        // LÓGICA DE FILTRADO COMBINADO (Buscador + Botones)
         function filterEverything() {
             const term = document.getElementById('searchInput').value.toLowerCase();
             const filtered = productos.filter(p => {
-                const matchSearch = p.name.toLowerCase().includes(term);
-                const matchCat = (currentCat === 'Todos' || p.cat === currentCat);
-                return matchSearch && matchCat;
+                const mSearch = p.name.toLowerCase().includes(term);
+                const mCat = currentCat === 'Todos' || p.cat === currentCat;
+                return mSearch && mCat;
             });
             render(filtered);
         }
 
         function setCategory(cat, btn) {
             currentCat = cat;
-            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active', 'bg-blue-600', 'text-white'));
             btn.classList.add('active');
             filterEverything();
         }
@@ -146,9 +155,9 @@
             Object.values(cart).forEach(item => {
                 const sub = item.price * item.qty;
                 total += sub;
-                list.innerHTML += `<div class="flex justify-between items-center py-2 border-b border-slate-100">
-                    <div><p class="font-bold text-blue-900">${item.name}</p><p class="text-[10px] text-slate-400">${item.qty} un x ${item.price.toLocaleString('es-VE')} Bs.</p></div>
-                    <span class="font-black text-blue-600">${sub.toLocaleString('es-VE')} Bs.</span>
+                list.innerHTML += `<div class="flex justify-between text-sm font-bold pb-2 border-b border-slate-50">
+                    <span class="text-slate-600">${item.name} (x${item.qty})</span>
+                    <span class="text-blue-600">${sub.toLocaleString('es-VE')} Bs.</span>
                 </div>`;
             });
             document.getElementById('modal-total').innerText = total.toLocaleString('es-VE') + " Bs.";
@@ -158,14 +167,14 @@
             const name = document.getElementById('cust-name').value;
             const address = document.getElementById('cust-address').value;
             const items = Object.values(cart);
-            if(!name || !address || items.length === 0) return alert("Completa tus datos y selecciona productos.");
+            if(!name || !address || items.length === 0) return alert("Por favor completa los datos.");
             let total = 0;
-            let msg = `🦷 *NUEVO PEDIDO STOCKDENTAL*%0A👤 *Cliente:* ${name}%0A📍 *Dirección:* ${address}%0A%0A`;
+            let msg = `🦷 *PEDIDO STOCKDENTAL*%0A👤 *Cliente:* ${name}%0A📍 *Dirección:* ${address}%0A%0A`;
             items.forEach(i => {
                 const s = i.price * i.qty; total += s;
                 msg += `• ${i.name} x${i.qty} (${s.toLocaleString('es-VE')} Bs.)%0A`;
             });
-            msg += `%0A💰 *TOTAL:* ${total.toLocaleString('es-VE')} Bs.%0A📌 _Precios a tasa BCV del día._`;
+            msg += `%0A💰 *TOTAL:* ${total.toLocaleString('es-VE')} Bs.%0A📌 _Tasa BCV del día._`;
             window.open(`https://wa.me/584243391197?text=${msg}`);
         }
 

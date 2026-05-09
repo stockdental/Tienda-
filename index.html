@@ -3,94 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StockDental | Suministros Profesionales</title>
+    <title>StockDental | Buscador Inteligente</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        .product-card { background: white; border-radius: 1.5rem; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); transition: transform 0.2s; }
-        .product-card:active { transform: scale(0.98); }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); z-index: 100; backdrop-filter: blur(10px); }
-        .modal.active { display: flex; align-items: center; justify-content: center; }
-        .modal-content { background: white; width: 92%; max-width: 450px; border-radius: 2rem; padding: 1.5rem; max-height: 90vh; overflow-y: auto; }
-        .input-field { background: #f1f5f9; border: 2px solid transparent; border-radius: 1rem; padding: 0.8rem 1rem; width: 100%; transition: all 0.3s; font-weight: 600; }
-        .input-field:focus { border-color: #3b82f6; background: white; outline: none; }
-        .category-pill { padding: 0.5rem 1.2rem; border-radius: 2rem; font-weight: 700; font-size: 0.75rem; white-space: nowrap; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        .header-gradient { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
+        .product-card { background: white; border-radius: 1.5rem; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .search-bar { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .search-bar:focus-within { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); z-index: 100; backdrop-filter: blur(8px); }
+        .modal.active { display: flex; align-items: flex-end; }
+        .modal-content { background: white; width: 100%; border-radius: 2.5rem 2.5rem 0 0; padding: 2rem; max-height: 90vh; overflow-y: auto; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body>
+<body class="text-slate-800">
 
-    <!-- Header Mejorado -->
-    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100 px-6 py-4">
-        <div class="max-w-xl mx-auto flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-[800] text-blue-900 leading-none tracking-tight">STOCK<span class="text-blue-500">DENTAL</span></h1>
-                <p class="text-[9px] font-extrabold text-slate-400 tracking-[0.2em] uppercase mt-1">Materiales para Profesionales</p>
+    <header class="header-gradient pt-8 pb-10 px-6 sticky top-[-1px] z-50 rounded-b-[2.5rem] shadow-2xl">
+        <div class="max-w-xl mx-auto">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h1 class="text-2xl font-800 text-white tracking-tight italic">STOCK<span class="font-400 opacity-80">DENTAL</span></h1>
+                    <p class="text-[10px] font-bold text-blue-100 uppercase tracking-[0.3em]">Catálogo Profesional</p>
+                </div>
+                <button onclick="toggleModal('cart-modal')" class="relative p-3 bg-white/20 backdrop-blur-md rounded-2xl text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                    <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-blue-900">0</span>
+                </button>
             </div>
-            <button onclick="toggleModal('cart-modal')" class="relative p-3 bg-blue-600 rounded-2xl text-white shadow-lg shadow-blue-200">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-                <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">0</span>
-            </button>
+
+            <div class="search-bar bg-white rounded-2xl flex items-center px-4 py-3 shadow-inner">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="¿Qué material buscas hoy?" class="bg-transparent w-full outline-none font-semibold text-slate-600 placeholder:text-slate-400">
+            </div>
         </div>
     </header>
 
-    <main class="max-w-xl mx-auto pb-32">
-        <!-- Banner de Bienvenida -->
-        <section class="px-6 pt-6">
-            <div class="bg-blue-900 rounded-[2rem] p-6 text-white relative overflow-hidden shadow-xl shadow-blue-100">
-                <div class="relative z-10">
-                    <h2 class="text-xl font-bold mb-1">¡Hola, Colega! 👋</h2>
-                    <p class="text-blue-200 text-sm opacity-90">Prepara tu pedido hoy a **tasa oficial BCV**.</p>
-                </div>
-                <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-blue-500/20 rounded-full blur-2xl"></div>
-            </div>
-        </section>
-
-        <!-- Filtros de Categoría -->
-        <div class="flex gap-3 overflow-x-auto px-6 py-6 no-scrollbar">
-            <button class="category-pill bg-blue-600 text-white shadow-md shadow-blue-100">Todos</button>
-            <button class="category-pill bg-white text-slate-400 border border-slate-100 italic">Laboratorio</button>
-            <button class="category-pill bg-white text-slate-400 border border-slate-100 italic">Clínica</button>
-            <button class="category-pill bg-white text-slate-400 border border-slate-100 italic">Bioseguridad</button>
+    <main class="max-w-xl mx-auto px-6 -mt-4 pb-32">
+        <div class="flex justify-between items-center py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+            <span>Resultados</span>
+            <span class="text-blue-600 bg-blue-50 px-2 py-1 rounded-md border border-blue-100">Precios a Tasa BCV</span>
         </div>
 
-        <!-- Lista de Productos -->
-        <section id="catalog" class="px-6 flex flex-col gap-6">
-            <!-- Inyectado por JS -->
-        </section>
+        <div id="catalog" class="flex flex-col gap-6">
+            </div>
+
+        <div id="noResults" class="hidden text-center py-20">
+            <p class="text-slate-400 font-bold italic">No encontramos ese producto...</p>
+        </div>
     </main>
 
-    <!-- Modal de Registro y Carrito -->
     <div id="cart-modal" class="modal" onclick="if(event.target == this) toggleModal('cart-modal')">
         <div class="modal-content">
-            <h2 class="text-2xl font-800 text-blue-900 mb-6 tracking-tight">Finalizar Pedido</h2>
+            <h2 class="text-2xl font-800 text-blue-900 mb-6">Finalizar Pedido</h2>
             
-            <!-- Formulario de Datos (BASE DE DATOS) -->
-            <div class="space-y-4 mb-8">
-                <div>
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nombre y Apellido</label>
-                    <input type="text" id="cust-name" class="input-field mt-1" placeholder="Ej. Dr. Juan Pérez">
-                </div>
-                <div>
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Dirección del Consultorio / Lab</label>
-                    <input type="text" id="cust-address" class="input-field mt-1" placeholder="Ciudad, Sector, Edificio...">
-                </div>
+            <div class="space-y-4 mb-6">
+                <input type="text" id="cust-name" class="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-xl p-4 outline-none font-bold transition-all" placeholder="Nombre completo">
+                <input type="text" id="cust-address" class="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-xl p-4 outline-none font-bold transition-all" placeholder="Dirección (Consultorio / Laboratorio)">
             </div>
 
-            <div id="cart-list" class="space-y-3 mb-6 max-h-40 overflow-y-auto pr-2"></div>
+            <div id="cart-list" class="space-y-3 mb-8"></div>
 
-            <div class="border-t border-slate-100 pt-6 mb-8 flex justify-between items-end">
-                <div>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total a Pagar (BCV)</p>
-                    <span id="modal-total" class="text-3xl font-black text-blue-600">0 Bs.</span>
-                </div>
-                <div class="text-right">
-                    <p class="text-[9px] font-bold text-slate-400 uppercase italic leading-none">Pago Móvil: 0102</p>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase italic">V-17888104</p>
-                </div>
+            <div class="flex justify-between items-center mb-8 border-t pt-6">
+                <span class="font-bold text-slate-400 uppercase text-xs">Total Estimado</span>
+                <span id="modal-total" class="text-3xl font-black text-blue-600 font-mono">0 Bs.</span>
             </div>
 
-            <button onclick="sendWhatsApp()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-black shadow-xl shadow-blue-100 active:scale-95 transition-all">ENVIAR PEDIDO POR WHATSAPP</button>
+            <button onclick="sendWhatsApp()" class="w-full bg-blue-600 text-white py-5 rounded-[1.5rem] font-black shadow-xl shadow-blue-200 uppercase tracking-wider transition-transform active:scale-95">Pedir por WhatsApp</button>
         </div>
     </div>
 
@@ -104,28 +88,36 @@
 
         let cart = {};
 
-        function render() {
+        function render(data = productos) {
             const container = document.getElementById('catalog');
+            const noResults = document.getElementById('noResults');
             container.innerHTML = "";
-            productos.forEach(p => {
+            
+            if (data.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            } else {
+                noResults.classList.add('hidden');
+            }
+
+            data.forEach(p => {
                 const qty = cart[p.id] ? cart[p.id].qty : 0;
                 container.innerHTML += `
                     <div class="product-card flex flex-col">
-                        <div class="h-52 bg-slate-100 overflow-hidden relative">
+                        <div class="h-48 bg-slate-200 overflow-hidden relative">
                             <img src="${p.img}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300?text=StockDental'">
-                            <span class="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-black text-blue-900 uppercase">${p.cat}</span>
+                            <span class="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[9px] font-black text-blue-900 uppercase">${p.cat}</span>
                         </div>
                         <div class="p-6">
-                            <h3 class="text-lg font-bold text-blue-900 mb-1">${p.name}</h3>
-                            <div class="flex justify-between items-end mt-4">
-                                <div class="flex flex-col">
-                                    <span class="text-xl font-black text-blue-600">${p.price.toLocaleString('es-VE')} Bs.</span>
-                                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Tasa BCV</span>
+                            <h3 class="text-lg font-bold text-blue-900 leading-tight mb-4">${p.name}</h3>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <span class="text-xl font-black text-blue-600">${p.price.toLocaleString('es-VE')} <small class="text-[10px] font-bold">Bs.</small></span>
                                 </div>
-                                <div class="flex items-center bg-slate-100 rounded-xl p-1 shadow-inner">
-                                    <button onclick="updateQty(${p.id}, -1)" class="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-blue-600 font-bold">-</button>
-                                    <span class="w-8 text-center font-bold text-blue-900">${qty}</span>
-                                    <button onclick="updateQty(${p.id}, 1)" class="w-8 h-8 flex items-center justify-center bg-blue-600 rounded-lg shadow-sm text-white font-bold">+</button>
+                                <div class="flex items-center bg-slate-50 rounded-xl p-1 shadow-inner border border-slate-100">
+                                    <button onclick="updateQty(${p.id}, -1)" class="w-9 h-9 flex items-center justify-center bg-white rounded-lg shadow-sm text-blue-600 font-bold">-</button>
+                                    <span class="w-8 text-center font-black text-blue-900">${qty}</span>
+                                    <button onclick="updateQty(${p.id}, 1)" class="w-9 h-9 flex items-center justify-center bg-blue-600 rounded-lg shadow-sm text-white font-bold">+</button>
                                 </div>
                             </div>
                         </div>
@@ -134,12 +126,33 @@
             });
         }
 
+        // LÓGICA DEL BUSCADOR
+        function filterProducts() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = productos.filter(p => 
+                p.name.toLowerCase().includes(term) || 
+                p.cat.toLowerCase().includes(term)
+            );
+            render(filtered);
+        }
+
         function updateQty(id, delta) {
             if (!cart[id]) cart[id] = { ...productos.find(p => p.id === id), qty: 0 };
             cart[id].qty += delta;
             if (cart[id].qty <= 0) delete cart[id];
-            document.getElementById('cart-count').innerText = Object.values(cart).reduce((a, b) => a + b.qty, 0);
-            render();
+            updateHeader();
+            renderFiltered(); // Mantiene el filtro actual al actualizar cantidad
+        }
+
+        function renderFiltered() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = productos.filter(p => p.name.toLowerCase().includes(term));
+            render(filtered);
+        }
+
+        function updateHeader() {
+            const count = Object.values(cart).reduce((a, b) => a + b.qty, 0);
+            document.getElementById('cart-count').innerText = count;
         }
 
         function toggleModal(id) {
@@ -155,9 +168,9 @@
             Object.values(cart).forEach(item => {
                 const sub = item.price * item.qty;
                 total += sub;
-                list.innerHTML += `<div class="flex justify-between text-sm">
-                    <span class="font-bold text-slate-600">${item.name} (x${item.qty})</span>
-                    <span class="font-black text-blue-900">${sub.toLocaleString('es-VE')} Bs.</span>
+                list.innerHTML += `<div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl">
+                    <div><p class="font-bold text-blue-900 text-sm">${item.name}</p><p class="text-xs text-blue-400 font-bold">${item.qty} un x ${item.price.toLocaleString('es-VE')} Bs.</p></div>
+                    <span class="font-black text-blue-600">${sub.toLocaleString('es-VE')} Bs.</span>
                 </div>`;
             });
             document.getElementById('modal-total').innerText = total.toLocaleString('es-VE') + " Bs.";
@@ -167,22 +180,16 @@
             const name = document.getElementById('cust-name').value;
             const address = document.getElementById('cust-address').value;
             const items = Object.values(cart);
-
-            if(!name || !address) return alert("Por favor, ingresa tu nombre y dirección para procesar el envío.");
-            if(items.length === 0) return alert("Tu carrito está vacío.");
-
-            let total = 0;
-            let msg = `🦷 *NUEVO PEDIDO STOCKDENTAL*%0A%0A`;
-            msg += `👤 *Cliente:* ${name}%0A📍 *Dirección:* ${address}%0A%0A`;
-            msg += `🛒 *DETALLE DEL PEDIDO:*%0A`;
+            if(!name || !address || items.length === 0) return alert("Completa tus datos y selecciona productos.");
             
+            let total = 0;
+            let msg = `🦷 *PEDIDO STOCKDENTAL*%0A%0A👤 *Cliente:* ${name}%0A📍 *Dirección:* ${address}%0A%0A`;
             items.forEach(i => {
                 const s = i.price * i.qty;
                 total += s;
                 msg += `• ${i.name} x${i.qty} (${s.toLocaleString('es-VE')} Bs.)%0A`;
             });
-
-            msg += `%0A💰 *TOTAL:* ${total.toLocaleString('es-VE')} Bs.%0A%0A📌 _Precios calculados a tasa BCV del día._`;
+            msg += `%0A💰 *TOTAL:* ${total.toLocaleString('es-VE')} Bs.%0A%0A📌 _Precios a tasa BCV del día._`;
             window.open(`https://wa.me/584243391197?text=${msg}`);
         }
 

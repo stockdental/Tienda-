@@ -1,31 +1,103 @@
-<div class="max-w-xl mx-auto flex justify-between items-center mb-4 px-4 py-2 bg-slate-50 rounded-xl border border-slate-100 italic font-black text-[10px] text-slate-400 uppercase">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockDental | Operatividad Total</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; overflow-x: hidden; position: relative; }
+        body::before {
+            content: ""; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg);
+            width: 80%; height: 80%; background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyLDJDMTUuMzEsMiAxOCw0LjY2IDE4LDcuOTVDMTgsMTIuNDEgMTIsMTkgMTIsMTlDMTIsMTkgNiwxMi40MSA2LDcuOTVDNiw0LjY2IDguNjksMiAxMiwyTTEyLDZBMiwyIDAgMCwwIDEwLDhBMiwyIDAgMCwwIDEyLDEwQTIsMiAwIDAgLDAgMTQsOEEyLDIgMCAwLDAgMTIsNloiIGZpbGw9IiMyNTYzZWIiIGZpbGwtb3BhY2l0eT0iMC4wNCIvPjwvc3ZnPg==');
+            background-repeat: no-repeat; background-position: center; background-size: contain; z-index: -1; pointer-events: none;
+        }
+        .product-card { background: white; border-radius: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .sidebar { position: fixed; left: -100%; top: 0; width: 300px; height: 100%; background: white; z-index: 200; transition: 0.4s; box-shadow: 10px 0 30px rgba(0,0,0,0.1); }
+        .sidebar.active { left: 0; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 150; backdrop-filter: blur(4px); }
+        .overlay.active { display: block; }
+        .category-btn { transition: 0.2s; border: 2px solid #e2e8f0; font-weight: 800; font-size: 10px; text-transform: uppercase; white-space: nowrap; }
+        .category-btn.active { background-color: #2563eb; color: white; border-color: #2563eb; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 300; backdrop-filter: blur(8px); }
+        .modal.active { display: flex; align-items: flex-end; }
+        .modal-content { background: white; width: 100%; border-radius: 2rem 2rem 0 0; padding: 2rem; max-height: 90vh; overflow-y: auto; }
+        button:disabled { background-color: #cbd5e1 !important; cursor: not-allowed; opacity: 0.8; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+    
+    <div id="sidebar" class="sidebar p-8 flex flex-col overflow-y-auto">
+        <button onclick="toggleMenu()" class="self-end mb-8 text-slate-400 font-bold uppercase text-[10px] bg-slate-50 px-3 py-2 rounded-lg">✕ Cerrar</button>
+        <div class="mb-8 space-y-6">
+            <div><h4 class="text-blue-900 font-800 text-xs uppercase mb-1 italic">¿Quiénes Somos?</h4><p class="text-[11px] text-slate-600">Expertos en distribución de insumos odontológicos de alta precisión.</p></div>
+            <div><h4 class="text-blue-900 font-800 text-xs uppercase mb-1 italic">Misión</h4><p class="text-[11px] text-slate-600">Proveer soluciones integrales para ser el aliado estratégico del profesional dental.</p></div>
+            <div><h4 class="text-blue-900 font-800 text-xs uppercase mb-1 italic">Visión</h4><p class="text-[11px] text-slate-600">Ser la distribuidora líder, reconocida por su calidad técnica y compromiso.</p></div>
+        </div>
+        <div class="mt-auto pt-8 border-t border-slate-100 text-center">
+            <h3 class="text-slate-400 font-black text-[9px] uppercase mb-3 italic tracking-widest">Aliados Comerciales</h3>
+            <button onclick="window.open('https://wa.me/584243391197?text=Hola,%20solicito%20servicios%20del%20Laboratorio%20Dental%20Ángel%20Molina')" class="w-full bg-blue-900 text-white p-5 rounded-2xl font-black text-[10px] uppercase shadow-xl leading-tight">
+                SOLICITAR SERVICIO DE<br>LABORATORIO DENTAL ÁNGEL MOLINA
+            </button>
+        </div>
+    </div>
+
+    <header class="bg-white sticky top-0 z-50 border-b border-slate-200 px-6 pt-4 pb-2">
+        <div class="max-w-xl mx-auto flex justify-between items-center mb-4">
+            <button onclick="toggleMenu()" class="bg-slate-100 p-3 rounded-2xl">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+            </button>
+            <div class="text-center flex flex-col items-center">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyLDJDMTUuMzEsMiAxOCw0LjY2IDE4LDcuOTVDMTgsMTIuNDEgMTIsMTkgMTIsMTlDMTIsMTkgNiwxMi40MSA2LDcuOTVDNiw0LjY2IDguNjksMiAxMiwyTTEyLDZBMiwyIDAgMCwwIDEwLDhBMiwyIDAgMCwwIDEyLDEwQTIsMiAwIDAgLDAgMTQsOEEyLDIgMCAwLDAgMTIsNloiIGZpbGw9IiMyNTYzZWIiLz48L3N2Zz4=" class="h-7 w-7 mb-1" alt="Logo">
+                <h1 class="text-xl font-800 text-blue-900 uppercase leading-none">Stock<span class="text-blue-500">Dental</span></h1>
+                <p class="text-[7px] tracking-[0.1em] text-slate-400 italic uppercase font-bold">Insumos y Materiales Odontológicos</p>
+            </div>
+            <button onclick="toggleModal('cart-modal')" class="relative p-3 bg-blue-600 rounded-2xl text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+                <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">0</span>
+            </button>
+        </div>
+
+        <div class="max-w-xl mx-auto flex justify-between items-center mb-4 px-4 py-2 bg-slate-50 rounded-xl border border-slate-100 italic font-black text-[10px] text-slate-400 uppercase">
             <span>ivoclar</span><span class="text-red-500">3M</span><span style="font-family:serif">VITA</span><span>KULZER</span>
         </div>
 
         <div class="max-w-xl mx-auto mb-4 px-4 py-2 bg-blue-900 rounded-xl flex items-center gap-3 shadow-lg shadow-blue-100">
-            <div class="bg-blue-500 p-2 rounded-lg animate-pulse">
+            <div class="bg-blue-500 p-2 rounded-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             </div>
-            <p class="text-[10px] text-white font-bold leading-tight">
-                PEDIDOS HASTA LAS 12:00 PM: <span class="text-blue-200 uppercase">Entrega en la tarde</span><br>
-                DESPUÉS DE LAS 12:00 PM: <span class="text-blue-200 uppercase">Entrega mañana mañana</span>
+            <p class="text-[9px] text-white font-bold leading-tight uppercase">
+                Pedidos hasta 12:00 PM: <span class="text-blue-300 underline">Entrega en la tarde</span><br>
+                Después de 12:00 PM: <span class="text-blue-300 underline">Entrega mañana siguiente</span>
             </p>
         </div>
 
-<div id="cart-modal" class="modal" onclick="if(event.target == this) toggleModal('cart-modal')">
-        <div class="modal-content">
-            <div id="cart-list" class="space-y-2 mb-6 max-h-40 overflow-y-auto pr-1 font-bold text-[11px]"></div>
-
-            <div class="bg-slate-50 border-l-4 border-blue-600 p-3 mb-6">
-                <p class="text-[10px] font-black text-blue-900 uppercase italic">🚚 Recordatorio de Entrega:</p>
-                <p class="text-[9px] text-slate-500 font-bold">Su pedido será procesado según el horario de corte (12:00 PM).</p>
-            </div>
-            
-            <div class="border-t pt-5 mb-8 flex justify-between items-center">
-                <span class="font-bold text-slate-400 text-xs uppercase">Total a pagar</span>
-                <span id="modal-total" class="text-3xl font-black text-blue-600">0 Bs.</span>
-            </div>
-            
-            <button id="btn-send" disabled onclick="sendWhatsApp()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase shadow-xl italic transition-all active:scale-95">Confirmar WhatsApp</button>
+        <div class="max-w-xl mx-auto mb-4 relative">
+            <input type="text" id="search-input" oninput="render()" placeholder="Buscar material o insumo..." class="w-full bg-slate-100 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 pl-12 font-bold text-sm outline-none transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute left-4 top-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
         </div>
-    </div>
+
+        <div class="max-w-xl mx-auto flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+            <button onclick="setCategory('Todos', this)" class="category-btn active px-5 py-2.5 rounded-xl">Todos</button>
+            <button onclick="setCategory('Odontólogo', this)" class="category-btn px-5 py-2.5 rounded-xl">Odontólogo</button>
+            <button onclick="setCategory('Estudiantes', this)" class="category-btn px-5 py-2.5 rounded-xl">Estudiantes</button>
+            <button onclick="setCategory('Técnicos', this)" class="category-btn px-5 py-2.5 rounded-xl">Técnicos</button>
+        </div>
+    </header>
+
+    <main id="catalog" class="max-w-xl mx-auto p-6 flex flex-col gap-6 pb-32"></main>
+
+    <div id="cart-modal" class="modal" onclick="if(event.target == this) toggleModal('cart-modal')">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <button onclick="toggleModal('cart-modal')" class="text-[10px] font-black text-blue-600 bg-blue-50 px-3 py-2 rounded-lg uppercase">← Volver</button>
+                <h2 class="text-xl font-800 text-blue-900 uppercase italic">Confirmar</h2>
+            </div>
+            
+            <div class="space-y-4 mb-6">
+                <input type="text" id="cust-name" oninput="validateForm()" class="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 font-bold text-sm outline-none" placeholder="Nombre completo">
+                <input type="text" id="cust

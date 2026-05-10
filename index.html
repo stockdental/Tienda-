@@ -3,36 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StockDental | Operaciones</title>
+    <title>StockDental | Insumos & Materiales</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
-        /* Marca de agua sutil */
-        .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); width: 70%; opacity: 0.03; z-index: -1; pointer-events: none; }
-        .product-card { background: white; border-radius: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.2s; }
-        .product-card:active { transform: scale(0.98); }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); z-index: 100; backdrop-filter: blur(8px); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; overflow-x: hidden; }
+        .product-card { background: white; border-radius: 1.5rem; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .sidebar { position: fixed; left: -100%; top: 0; width: 300px; height: 100%; background: white; z-index: 200; transition: 0.4s; box-shadow: 10px 0 30px rgba(0,0,0,0.1); }
+        .sidebar.active { left: 0; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 150; backdrop-filter: blur(4px); }
+        .overlay.active { display: block; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; backdrop-filter: blur(8px); }
         .modal.active { display: flex; align-items: flex-end; }
-        .modal-content { background: white; width: 100%; border-radius: 2rem 2rem 0 0; padding: 2rem; max-height: 85vh; overflow-y: auto; }
+        .modal-content { background: white; width: 100%; border-radius: 2rem 2rem 0 0; padding: 2rem; max-height: 90vh; overflow-y: auto; }
     </style>
 </head>
 <body class="text-slate-800">
 
-    <img src="https://img.freepik.com/vector-gratis/logotipo-dental-diseno-azul_1394-118.jpg" class="watermark" alt="bg">
+    <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+    
+    <div id="sidebar" class="sidebar p-8 flex flex-col">
+        <button onclick="toggleMenu()" class="self-end mb-8 text-slate-400 font-bold uppercase text-[10px] bg-slate-50 px-3 py-2 rounded-lg">✕ Cerrar</button>
+        <div class="mb-8">
+            <h3 class="text-blue-600 font-black text-[10px] uppercase tracking-widest mb-4 italic">Nuestra Empresa</h3>
+            <div class="space-y-5 text-xs text-slate-600">
+                <p><strong>¿Quiénes Somos?</strong> Expertos en distribución de insumos odontológicos.</p>
+                <p><strong>Ubicación:</strong> 📍 Maracay, Estado Aragua.</p>
+            </div>
+        </div>
+        <button onclick="window.open('https://wa.me/584243391197')" class="mt-auto bg-blue-900 text-white p-5 rounded-2xl font-black text-[10px] uppercase">🚀 Solicitar Laboratorio</button>
+    </div>
 
     <header class="bg-white sticky top-0 z-50 border-b border-slate-200 px-6 py-4">
         <div class="max-w-xl mx-auto flex justify-between items-center">
             <button onclick="toggleMenu()" class="bg-slate-100 p-3 rounded-2xl">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
             </button>
-            
             <div class="text-center">
-                <h1 class="text-2xl font-800 text-blue-900 uppercase tracking-tighter leading-none">Stock<span class="text-blue-500">Dental</span></h1>
-                <p class="text-[8px] tracking-[0.2em] text-slate-400 italic uppercase font-bold mt-1">Insumos & Materiales</p>
+                <h1 class="text-xl font-800 text-blue-900 uppercase leading-none">Stock<span class="text-blue-500">Dental</span></h1>
+                <p class="text-[7px] tracking-[0.1em] text-slate-400 italic uppercase font-bold mt-1">Insumos y Materiales Odontológicos</p>
             </div>
-
-            <button onclick="toggleModal('cart-modal')" class="relative p-3 bg-blue-600 rounded-2xl text-white shadow-lg shadow-blue-200">
+            <button onclick="toggleModal('cart-modal')" class="relative p-3 bg-blue-600 rounded-2xl text-white">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
                 <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">0</span>
             </button>
@@ -44,112 +55,122 @@
     <div id="cart-modal" class="modal" onclick="if(event.target == this) toggleModal('cart-modal')">
         <div class="modal-content">
             <div class="flex justify-between items-center mb-6">
-                <button onclick="toggleModal('cart-modal')" class="text-[10px] font-black text-blue-600 bg-blue-50 px-4 py-2 rounded-xl uppercase">← Volver</button>
-                <h2 class="text-xl font-800 text-blue-900 uppercase italic">Tu Pedido</h2>
+                <button onclick="toggleModal('cart-modal')" class="text-[10px] font-black text-blue-600 bg-blue-50 px-3 py-2 rounded-lg uppercase">← Seguir Comprando</button>
+                <h2 class="text-xl font-800 text-blue-900 uppercase italic">Pedido</h2>
             </div>
             
-            <div id="cart-list" class="space-y-3 mb-6">
+            <div class="space-y-4 mb-6">
+                <input type="text" id="cust-name" class="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 font-bold text-sm outline-none" placeholder="Nombre completo">
+                <input type="text" id="cust-address" class="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 font-bold text-sm outline-none" placeholder="Dirección / Clínica">
+                
+                <div class="bg-blue-50 border-2 border-blue-200 rounded-2xl p-5 space-y-3">
+                    <p class="text-[11px] text-blue-900 font-black text-center uppercase tracking-tight">
+                        PAGO MÓVIL: V-17888104 | 0424-339.1197 <br>
+                        <span class="text-blue-600 text-[12px]">VENEZUELA (0102) | MERCANTIL (0105)</span>
+                    </p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" id="pay-bank" placeholder="Banco Origen" class="bg-white p-3 rounded-xl text-xs font-bold border border-blue-100">
+                        <input type="text" id="pay-ref" placeholder="Últimos 4 Ref." class="bg-white p-3 rounded-xl text-xs font-bold border border-blue-100">
+                    </div>
                 </div>
-
-            <div class="bg-slate-50 rounded-2xl p-5 mb-6">
-                <div class="flex justify-between items-center mb-4">
-                    <span class="text-xs font-bold text-slate-400 uppercase">Total Final</span>
-                    <span id="modal-total" class="text-3xl font-black text-blue-600">0 Bs.</span>
-                </div>
-                <p class="text-[10px] text-center text-slate-400 font-bold uppercase italic border-t pt-3">
-                    Pagos vía Pago Móvil: V-17888104<br>
-                    Venezuela (0102) | Mercantil (0105)
-                </p>
             </div>
 
-            <button onclick="sendWhatsApp()" id="btn-send" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase shadow-xl transition-all active:scale-95">
-                Confirmar Pedido
-            </button>
+            <div id="cart-list" class="space-y-2 mb-6"></div>
+            
+            <div class="border-t pt-5 mb-8 flex justify-between items-center">
+                <span class="font-bold text-slate-400 text-xs uppercase italic">Total a Pagar</span>
+                <span id="modal-total" class="text-3xl font-black text-blue-600">0 Bs.</span>
+            </div>
+            <button onclick="sendWhatsApp()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase shadow-xl italic">Confirmar en WhatsApp</button>
         </div>
     </div>
 
     <script>
-        const tasaBCV = 52.30;
-        const tasaUSDT = 65.00;
-        const margen = 0.20;
+        const tasaBCV = 52.30;   
+        const tasaUSDT = 65.00;  
+        const margenDeseado = 0.20; 
 
         const productos = [
-            { id: 1, name: "Yeso WhipMix T4", costo: 11, img: "img/yeso-t4.jpg.jpeg", cat: "Técnicos" },
-            { id: 2, name: "Guantes de Nitrilo", costo: 10, img: "img/guantes.jpg.jpeg", cat: "Odontólogo" },
-            { id: 3, name: "Acrílico Líquido", costo: 8, img: "img/acrilico.jpg.jpeg", cat: "Técnicos" },
-            { id: 4, name: "Cera Base Tropical", costo: 9, img: "img/cera-base.jpg.jpeg", cat: "Estudiantes" },
-            { id: 5, name: "Yeso Blanco", costo: 2, img: "img/yeso-blanco.jpg.jpeg", cat: "Estudiantes" }
+            { id: 1, name: "Yeso WhipMix T4", costoUSD: 11, img: "img/yeso-t4.jpg.jpeg", ficha: "Yeso tipo IV de alta resistencia." },
+            { id: 2, name: "Guantes de Nitrilo", costoUSD: 10, img: "img/guantes.jpg.jpeg", ficha: "Libres de látex y polvo." },
+            { id: 3, name: "Acrílico Líquido", costoUSD: 8, img: "img/acrilico.jpg.jpeg", ficha: "Monómero estable." },
+            { id: 4, name: "Cera Base Tropical", costoUSD: 9, img: "img/cera-base.jpg.jpeg", ficha: "Para climas cálidos." },
+            { id: 5, name: "Yeso Blanco", costoUSD: 2, img: "img/yeso-blanco.jpg.jpeg", ficha: "Yeso tipo II para estudio." }
         ];
 
         let cart = {};
 
-        function calcularPVP(costo) {
-            const pvpDolar = costo / (1 - margen);
-            return pvpDolar * tasaUSDT;
+        function calcularPrecioBs(costo) {
+            const precioVentaUSDT = costo / (1 - margenDeseado);
+            return precioVentaUSDT * tasaUSDT;
         }
 
         function render() {
             const container = document.getElementById('catalog');
             container.innerHTML = "";
             productos.forEach(p => {
-                const precio = calcularPVP(p.costo);
+                const precioBs = calcularPrecioBs(p.costoUSD);
                 const qty = cart[p.id] ? cart[p.id].qty : 0;
                 container.innerHTML += `
-                    <div class="product-card p-5 flex items-center gap-4">
-                        <img src="${p.img}" class="w-20 h-20 object-cover rounded-xl bg-slate-50">
-                        <div class="flex-1">
-                            <h3 class="font-bold text-blue-900 text-sm leading-tight">${p.name}</h3>
-                            <p class="text-blue-600 font-black text-lg">${precio.toLocaleString('es-VE')} <small class="text-[10px]">Bs.</small></p>
+                    <div class="product-card p-6">
+                        <img src="${p.img}" class="h-48 w-full object-contain mb-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold text-blue-900 leading-tight">${p.name}</h3>
+                            <button onclick="alert('FICHA TÉCNICA: ${p.ficha}')" class="text-blue-500 bg-blue-50 px-2 py-1 rounded-md text-[9px] font-black uppercase tracking-tighter">Ficha</button>
                         </div>
-                        <div class="flex flex-col items-center gap-1 bg-slate-50 p-1 rounded-xl">
-                            <button onclick="updateQty(${p.id}, 1)" class="w-8 h-8 bg-blue-600 text-white rounded-lg font-bold">+</button>
-                            <span class="font-bold text-xs">${qty}</span>
-                            <button onclick="updateQty(${p.id}, -1)" class="w-8 h-8 bg-white text-blue-600 rounded-lg font-bold shadow-sm">-</button>
+                        <div class="flex justify-between items-end mt-4">
+                            <div><span class="text-2xl font-black text-blue-600">${precioBs.toLocaleString('es-VE')} <small class="text-xs">Bs.</small></span></div>
+                            <div class="flex items-center bg-slate-100 rounded-2xl p-1">
+                                <button onclick="updateQty(${p.id}, -1)" class="w-8 h-8 bg-white rounded-xl shadow-sm text-blue-600 font-bold">-</button>
+                                <span class="w-8 text-center font-bold">${qty}</span>
+                                <button onclick="updateQty(${p.id}, 1)" class="w-8 h-8 bg-blue-600 rounded-xl shadow-sm text-white font-bold">+</button>
+                            </div>
                         </div>
                     </div>`;
             });
         }
 
         function updateQty(id, delta) {
-            if (!cart[id]) {
-                const p = productos.find(x => x.id === id);
-                cart[id] = { ...p, qty: 0 };
-            }
+            if (!cart[id]) { const p = productos.find(x => x.id === id); cart[id] = { ...p, qty: 0 }; }
             cart[id].qty += delta;
             if (cart[id].qty <= 0) delete cart[id];
-            
-            const totalItems = Object.values(cart).reduce((a, b) => a + b.qty, 0);
-            document.getElementById('cart-count').innerText = totalItems;
+            document.getElementById('cart-count').innerText = Object.values(cart).reduce((a, b) => a + b.qty, 0);
             render();
             if(document.getElementById('cart-modal').classList.contains('active')) updateCartList();
+        }
+
+        function removeItem(id) {
+            delete cart[id];
+            document.getElementById('cart-count').innerText = Object.values(cart).reduce((a, b) => a + b.qty, 0);
+            updateCartList();
+            render();
         }
 
         function updateCartList() {
             const list = document.getElementById('cart-list');
             let total = 0;
             list.innerHTML = Object.values(cart).map(i => {
-                const subtotal = calcularPVP(i.costo) * i.qty;
-                total += subtotal;
-                return `<div class="flex justify-between text-xs font-bold border-b pb-2 italic">
-                            <span>${i.name} (x${i.qty})</span>
-                            <span>${subtotal.toLocaleString('es-VE')} Bs.</span>
-                        </div>`;
+                const sub = calcularPrecioBs(i.costoUSD) * i.qty;
+                total += sub;
+                return `<div class="flex justify-between items-center text-[11px] font-bold border-b border-slate-50 pb-2">
+                    <div class="flex items-center gap-2">
+                        <button onclick="removeItem(${i.id})" class="text-red-500 bg-red-50 p-1 rounded-md">✕</button>
+                        <span>${i.name} (x${i.qty})</span>
+                    </div>
+                    <span>${sub.toLocaleString('es-VE')} Bs.</span>
+                </div>`;
             }).join('');
             document.getElementById('modal-total').innerText = total.toLocaleString('es-VE') + " Bs.";
         }
 
-        function toggleModal(id) {
-            const m = document.getElementById(id);
-            m.classList.toggle('active');
-            if(m.classList.contains('active')) updateCartList();
-        }
-
+        function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
+        function toggleModal(id) { document.getElementById(id).classList.toggle('active'); if(document.getElementById(id).classList.contains('active')) updateCartList(); }
+        
         function sendWhatsApp() {
-            if(Object.keys(cart).length === 0) return alert("El carrito está vacío");
-            let msg = "*PEDIDO STOCKDENTAL*%0A%0A";
-            Object.values(cart).forEach(i => {
-                msg += `• ${i.name} (x${i.qty})%0A`;
-            });
+            const name = document.getElementById('cust-name').value;
+            if(!name) return alert("Por favor ingresa tu nombre");
+            let msg = `🦷 *PEDIDO STOCKDENTAL*%0A👤 *Cliente:* ${name}%0A%0A`;
+            Object.values(cart).forEach(i => { msg += `• ${i.name} (x${i.qty})%0A`; });
             msg += `%0A*TOTAL:* ${document.getElementById('modal-total').innerText}`;
             window.open(`https://wa.me/584243391197?text=${msg}`);
         }

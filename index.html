@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StockDental | Insumos & Materiales</title>
+    <title>StockDental | Operaciones</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; overflow-x: hidden; position: relative; }
+        /* MARCA DE AGUA CLÍNICA */
         body::before {
             content: ""; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg);
             width: 80%; height: 80%; background-image: url('https://img.freepik.com/vector-gratis/logotipo-dental-diseno-azul_1394-118.jpg');
-            background-repeat: no-repeat; background-position: center; background-size: contain; opacity: 0.03; z-index: -1; pointer-events: none;
+            background-repeat: no-repeat; background-position: center; background-size: contain; opacity: 0.04; z-index: -1; pointer-events: none;
         }
-        .product-card { background: white; border-radius: 1.5rem; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); z-index: 1; }
+        .product-card { background: white; border-radius: 1.5rem; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .sidebar { position: fixed; left: -100%; top: 0; width: 300px; height: 100%; background: white; z-index: 200; transition: 0.4s; box-shadow: 10px 0 30px rgba(0,0,0,0.1); }
         .sidebar.active { left: 0; }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 150; backdrop-filter: blur(4px); }
@@ -30,16 +31,25 @@
 
     <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
     
-    <div id="sidebar" class="sidebar p-8 flex flex-col">
+    <div id="sidebar" class="sidebar p-8 flex flex-col overflow-y-auto">
         <button onclick="toggleMenu()" class="self-end mb-8 text-slate-400 font-bold uppercase text-[10px] bg-slate-50 px-3 py-2 rounded-lg">✕ Cerrar</button>
-        <div class="mb-8">
-            <h3 class="text-blue-600 font-black text-[10px] uppercase tracking-widest mb-4 italic">Nuestra Empresa</h3>
-            <div class="space-y-4 text-[11px] text-slate-600">
-                <p><strong>Laboratorio Molimed:</strong> Expertos en distribución de insumos odontológicos y prótesis dentales.</p>
-                <p><strong>Ubicación:</strong> 📍 Maracay, Estado Aragua.</p>
+        <div class="space-y-6 mb-8">
+            <div>
+                <h3 class="text-blue-600 font-black text-[10px] uppercase tracking-widest mb-2 italic">Misión</h3>
+                <p class="text-[11px] text-slate-600 leading-relaxed italic">Proveer soluciones integrales con materiales odontológicos de vanguardia para ser el aliado estratégico del sector dental.</p>
+            </div>
+            <div>
+                <h3 class="text-blue-600 font-black text-[10px] uppercase tracking-widest mb-2 italic">Visión</h3>
+                <p class="text-[11px] text-slate-600 leading-relaxed italic">Ser la distribuidora líder en el centro del país, reconocida por la calidad técnica y el compromiso con nuestros clientes.</p>
             </div>
         </div>
-        <button onclick="window.open('https://wa.me/584243391197')" class="mt-auto bg-blue-900 text-white p-5 rounded-2xl font-black text-[10px] uppercase shadow-xl">🚀 Solicitar Laboratorio</button>
+        
+        <div class="mt-auto pt-6 text-center border-t border-slate-100">
+            <h3 class="text-slate-400 font-black text-[9px] uppercase mb-3 italic tracking-widest">Aliados Comerciales</h3>
+            <button onclick="window.open('https://wa.me/584243391197')" class="w-full bg-blue-900 text-white p-5 rounded-2xl font-black text-[10px] uppercase shadow-xl leading-tight">
+                Solicitar Servicios de<br>Laboratorio Dental
+            </button>
+        </div>
     </div>
 
     <header class="bg-white sticky top-0 z-50 border-b border-slate-200 px-6 py-4">
@@ -68,66 +78,78 @@
         <div class="modal-content">
             <div class="flex justify-between items-center mb-6">
                 <button onclick="toggleModal('cart-modal')" class="text-[10px] font-black text-blue-600 bg-blue-50 px-3 py-2 rounded-lg uppercase">← Volver</button>
-                <h2 class="text-xl font-800 text-blue-900 uppercase italic tracking-tighter">Pedido</h2>
+                <h2 class="text-xl font-800 text-blue-900 uppercase italic">Pedido</h2>
             </div>
             
-            <div class="space-y-4 mb-6">
+            <div class="space-y-3 mb-6">
                 <input type="text" id="cust-name" class="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 font-bold text-sm outline-none" placeholder="Nombre completo">
                 <input type="text" id="cust-address" class="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 font-bold text-sm outline-none" placeholder="Dirección / Clínica">
                 
+                <select id="delivery-zone" onchange="updateCartList()" class="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 font-bold text-sm outline-none">
+                    <option value="none">Seleccionar Delivery</option>
+                    <option value="3">Maracay (+3$)</option>
+                    <option value="4">Turmero (+4$)</option>
+                    <option value="5">Cagua (+5$)</option>
+                    <option value="0">MRW (Cobro Destino)</option>
+                </select>
+
                 <div class="bg-blue-50 border-2 border-blue-200 rounded-2xl p-5 space-y-3">
-                    <p class="text-[11px] text-blue-900 font-black text-center uppercase">
-                        PAGO MÓVIL: V-17888104 | 0424-339.1197 <br>
-                        <span class="text-blue-600 text-[12px]">VENEZUELA (0102) | MERCANTIL (0105)</span>
-                    </p>
+                    <p class="text-[11px] text-blue-900 font-black text-center uppercase tracking-tighter">PAGO MÓVIL: V-17888104 | 0424-339.1197</p>
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="pay-bank" placeholder="Banco Origen" class="bg-white p-3 rounded-xl text-xs font-bold border border-blue-100">
-                        <input type="text" id="pay-ref" placeholder="Ref. (4 Dígitos)" class="bg-white p-3 rounded-xl text-xs font-bold border border-blue-100">
+                        <input type="text" id="pay-bank" placeholder="Banco Origen" class="bg-white p-3 rounded-xl text-[11px] font-bold border border-blue-100">
+                        <input type="text" id="pay-ref" placeholder="Últimos 4 Ref." class="bg-white p-3 rounded-xl text-[11px] font-bold border border-blue-100">
                     </div>
+                    <input type="number" id="pay-amount" placeholder="Monto Transferido en Bs." class="w-full bg-white p-3 rounded-xl text-[11px] font-bold border border-blue-100">
                 </div>
             </div>
 
             <div id="cart-list" class="space-y-2 mb-6"></div>
             <div class="border-t pt-5 mb-8 flex justify-between items-center">
-                <span class="font-bold text-slate-400 text-xs uppercase">Total</span>
+                <span class="font-bold text-slate-400 text-xs uppercase italic">Total</span>
                 <span id="modal-total" class="text-3xl font-black text-blue-600">0 Bs.</span>
             </div>
-            <button onclick="sendWhatsApp()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase shadow-xl italic active:scale-95 transition-all">Confirmar WhatsApp</button>
+            <button onclick="sendWhatsApp()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase shadow-xl italic transition-all active:scale-95">Confirmar WhatsApp</button>
         </div>
     </div>
 
     <script>
-        const tasaUSDT = 65.00;
-        const margen = 0.20;
+        const tasaActual = 65.00; // Tasa USDT (Binance) - Cambiar solo aquí diariamente
+        const margenVenta = 0.20; // 20% de ganancia
+
+        // AQUI DEFINIMOS LOS COSTOS BASE EN USDT (Punto 1 corregido)
         const productos = [
-            { id: 1, name: "Yeso WhipMix T4", costo: 11, img: "img/yeso-t4.jpg.jpeg", cat: "Técnicos", ficha: "Yeso tipo IV alta resistencia." },
-            { id: 2, name: "Guantes de Nitrilo", costo: 10, img: "img/guantes.jpg.jpeg", cat: "Odontólogo", ficha: "Libres de látex y polvo." },
-            { id: 3, name: "Acrílico Líquido", costo: 8, img: "img/acrilico.jpg.jpeg", cat: "Técnicos", ficha: "Monómero de alta estabilidad." },
-            { id: 4, name: "Cera Base Tropical", costo: 9, img: "img/cera-base.jpg.jpeg", cat: "Estudiantes", ficha: "Resistente a climas cálidos." },
-            { id: 5, name: "Yeso Blanco", costo: 2, img: "img/yeso-blanco.jpg.jpeg", cat: "Estudiantes", ficha: "Yeso tipo II para estudio." }
+            { id: 1, name: "Yeso WhipMix T4", costoUSDT: 11, img: "img/yeso-t4.jpg.jpeg", cat: "Técnicos", ficha: "Yeso tipo IV de alta resistencia." },
+            { id: 2, name: "Guantes de Nitrilo", costoUSDT: 10, img: "img/guantes.jpg.jpeg", cat: "Odontólogo", ficha: "Libres de látex y polvo." },
+            { id: 3, name: "Acrílico Líquido", costoUSDT: 8, img: "img/acrilico.jpg.jpeg", cat: "Técnicos", ficha: "Monómero de alta estabilidad." },
+            { id: 4, name: "Cera Base Tropical", costoUSDT: 9, img: "img/cera-base.jpg.jpeg", cat: "Estudiantes", ficha: "Resistente a climas cálidos." },
+            { id: 5, name: "Yeso Blanco", costoUSDT: 2, img: "img/yeso-blanco.jpg.jpeg", cat: "Estudiantes", ficha: "Yeso tipo II para estudio." }
         ];
 
         let cart = {};
         let currentCat = 'Todos';
 
-        function calcularPrecio(costo) { return (costo / (1 - margen)) * tasaUSDT; }
+        // TU FÓRMULA DE CÁLCULO MEJORADA
+        function calcularPrecioVentaBs(costoUSDT) { 
+            const pvpUSDT = costoUSDT / (1 - margenVenta); // Primero sacamos el valor de venta en dólares
+            return pvpUSDT * tasaActual; // Luego multiplicamos por la tasa del día
+        }
 
         function render() {
             const container = document.getElementById('catalog');
             container.innerHTML = "";
             const filtered = productos.filter(p => currentCat === 'Todos' || p.cat === currentCat);
             filtered.forEach(p => {
-                const precio = calcularPrecio(p.costo);
+                const precioFinalBs = calcularPrecioVentaBs(p.costoUSDT);
                 const qty = cart[p.id] ? cart[p.id].qty : 0;
                 container.innerHTML += `
                     <div class="product-card p-6">
                         <img src="${p.img}" class="h-44 w-full object-contain mb-4" onerror="this.src='https://placehold.co/400x400?text=StockDental'">
                         <div class="flex justify-between items-start mb-2">
                             <h3 class="text-lg font-bold text-blue-900 leading-tight">${p.name}</h3>
-                            <button onclick="alert('FICHA: ${p.ficha}')" class="text-blue-500 bg-blue-50 px-2 py-1 rounded-md text-[9px] font-black uppercase">Ficha</button>
+                            <button onclick="alert('FICHA TÉCNICA: ${p.ficha}')" class="text-blue-500 bg-blue-50 px-2 py-1 rounded-md text-[8px] font-black uppercase tracking-tighter">Ficha Técnica</button>
                         </div>
                         <div class="flex justify-between items-end mt-4">
-                            <span class="text-2xl font-black text-blue-600">${precio.toLocaleString('es-VE')} <small class="text-xs">Bs.</small></span>
+                            <span class="text-2xl font-black text-blue-600">${precioFinalBs.toLocaleString('es-VE')} <small class="text-xs">Bs.</small></span>
                             <div class="flex items-center bg-slate-100 rounded-2xl p-1">
                                 <button onclick="updateQty(${p.id}, -1)" class="w-8 h-8 bg-white rounded-xl shadow-sm text-blue-600 font-bold">-</button>
                                 <span class="w-8 text-center font-bold">${qty}</span>
@@ -151,27 +173,40 @@
 
         function updateCartList() {
             const list = document.getElementById('cart-list');
+            const zone = document.getElementById('delivery-zone');
             let total = 0;
+            
             list.innerHTML = Object.values(cart).map(i => {
-                const sub = calcularPrecio(i.costo) * i.qty;
+                const sub = calcularPrecioVentaBs(i.costoUSDT) * i.qty;
                 total += sub;
                 return `<div class="flex justify-between items-center text-[11px] font-bold border-b border-slate-50 pb-2">
                     <div class="flex items-center gap-2"><button onclick="removeItem(${i.id})" class="text-red-500 bg-red-50 p-1 rounded-md">✕</button><span>${i.name} (x${i.qty})</span></div>
                     <span>${sub.toLocaleString('es-VE')} Bs.</span>
                 </div>`;
             }).join('');
-            document.getElementById('modal-total').innerText = total.toLocaleString('es-VE') + " Bs.";
+            
+            const shippingCostUSD = (zone.value !== "none" && zone.value !== "0") ? parseFloat(zone.value) : 0;
+            const shippingBs = shippingCostUSD * tasaActual;
+            
+            if(shippingBs > 0) list.innerHTML += `<div class="flex justify-between text-[11px] font-black text-blue-500 pt-2 uppercase italic"><span>Envío: ${zone.options[zone.selectedIndex].text}</span><span>${shippingBs.toLocaleString('es-VE')} Bs.</span></div>`;
+            
+            document.getElementById('modal-total').innerText = (total + shippingBs).toLocaleString('es-VE') + " Bs.";
         }
 
         function setCategory(cat, btn) { currentCat = cat; document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); render(); }
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
         function toggleModal(id) { document.getElementById(id).classList.toggle('active'); if(document.getElementById(id).classList.contains('active')) updateCartList(); }
+        
         function sendWhatsApp() {
             const n = document.getElementById('cust-name').value;
-            if(!n || Object.keys(cart).length === 0) return alert("Completa los datos");
-            let msg = `🦷 *PEDIDO STOCKDENTAL*%0A👤 *Cliente:* ${n}%0A%0A`;
+            const b = document.getElementById('pay-bank').value;
+            const r = document.getElementById('pay-ref').value;
+            const m = document.getElementById('pay-amount').value;
+            if(!n || !b || !r || !m || Object.keys(cart).length === 0) return alert("Por favor completa todos los datos de pedido y pago.");
+            
+            let msg = `🦷 *PEDIDO STOCKDENTAL*%0A👤 *Cliente:* ${n}%0A💰 *Pago:* ${b} | Ref: ${r} | Monto: ${m} Bs.%0A%0A`;
             Object.values(cart).forEach(i => msg += `• ${i.name} (x${i.qty})%0A`);
-            msg += `%0A*TOTAL:* ${document.getElementById('modal-total').innerText}`;
+            msg += `%0A*TOTAL A PAGAR:* ${document.getElementById('modal-total').innerText}`;
             window.open(`https://wa.me/584243391197?text=${msg}`);
         }
         render();
